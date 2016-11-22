@@ -6,29 +6,28 @@ license that can be found in the LICENSE file.
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="codemirror-import.html">
 
-<polymer-element name="code-mirror" attributes="value mode theme tabSize lineNumbers">
+<dom-module id="code-mirror">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/codemirror.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/ambiance.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/ambiance-mobile.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/blackboard.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/cobalt.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/eclipse.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/elegant.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/erlang-dark.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/lesser-dark.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/midnight.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/monokai.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/neat.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/night.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/rubyblue.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/solarized.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/twilight.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/vibrant-ink.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/xq-dark.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/theme/xq-light.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.21.0/addon/fold/foldgutter.css" rel="stylesheet">
   <template>
-    <link rel="stylesheet" href="codemirror-4.0/lib/codemirror.css">
-    <link href="codemirror-4.0/theme/ambiance.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/ambiance-mobile.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/blackboard.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/cobalt.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/eclipse.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/elegant.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/erlang-dark.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/lesser-dark.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/midnight.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/monokai.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/neat.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/night.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/rubyblue.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/solarized.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/twilight.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/vibrant-ink.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/xq-dark.css" rel="stylesheet">
-    <link href="codemirror-4.0/theme/xq-light.css" rel="stylesheet">
-    <link href="codemirror-4.0/addon/fold/foldgutter.css" rel="stylesheet">
-
     <style>
       :host {
         display: block;
@@ -44,18 +43,36 @@ license that can be found in the LICENSE file.
     </style>
   </template>
   <script>
-    Polymer('code-mirror', {
-      value: '',
-      mode: 'htmlmixed',
-      theme: 'xq-light',
-      tabSize: 2,
-      lineNumbers: true,
-      ready: function() {
-        if (!this.value) {
-          this.value = this.textContent;
+    Polymer({
+      is: "code-mirror",
+      properties: {
+        value: {
+          type: String,
+          value: ""
+        },
+        mode: {
+          type: String,
+          value: "htmlmixed"
+        },
+        theme: {
+          type: String,
+          value: "xq-light"
+        },
+        tabSize: {
+          type: Number,
+          value: 2
+        },
+        lineNumbers: {
+          type: Boolean,
+          value: true
         }
-        this.mirror = CodeMirror(this.shadowRoot, {
-          value: this.value || this.textContent,
+      },
+      ready: function() {
+        if(!this.value) {
+          this.value = Polymer.dom(this).textContent;
+        }
+        this.mirror = CodeMirror(this, {
+          value: this.value || Polymer.dom(this).textContent,
           mode: this.mode,
           theme: this.theme,
           tabSize: this.tabSize,
@@ -63,6 +80,8 @@ license that can be found in the LICENSE file.
           foldGutter: true,
           gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
         });
+        this.refresh();
+        this.focus();
       },
       refresh: function() {
         this.mirror.refresh();
@@ -87,4 +106,4 @@ license that can be found in the LICENSE file.
       }
     });
   </script>
-</polymer-element>
+</dom-module>
